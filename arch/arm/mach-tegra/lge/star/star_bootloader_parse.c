@@ -221,7 +221,10 @@ static int __init get_cfg_from_tags(void)
 		tegra_bootloader_fb_start = NvBootArgs.MemHandleArgs[NvBootArgs.FramebufferArgs.MemHandleKey - ATAG_NVIDIA_PRESERVED_MEM_0].Address;
 		tegra_bootloader_fb_size  = NvBootArgs.MemHandleArgs[NvBootArgs.FramebufferArgs.MemHandleKey - ATAG_NVIDIA_PRESERVED_MEM_0].Size;
 
-		pr_info("Nvidia ATAG: framebuffer: %lu @ 0x%08lx\n",tegra_bootloader_fb_size,tegra_bootloader_fb_start);
+		pr_debug("Nvidia TAG: framebuffer: %lu @ 0x%08lx\n",tegra_bootloader_fb_size,tegra_bootloader_fb_start);
+
+		/* disable bootloader screen copying ... */
+		/*tegra_bootloader_fb_size = tegra_bootloader_fb_start = 0;*/
 	}
 
 	/* If the LP0 vector is found, use it */
@@ -234,7 +237,11 @@ static int __init get_cfg_from_tags(void)
 		tegra_lp0_vec_start = NvBootArgs.MemHandleArgs[NvBootArgs.WarmbootArgs.MemHandleKey - ATAG_NVIDIA_PRESERVED_MEM_0].Address;
 		tegra_lp0_vec_size  = NvBootArgs.MemHandleArgs[NvBootArgs.WarmbootArgs.MemHandleKey - ATAG_NVIDIA_PRESERVED_MEM_0].Size;
 
-		pr_info("Nvidia ATAG: LP0: %lu @ 0x%08lx\n",tegra_lp0_vec_size,tegra_lp0_vec_start);
+		pr_debug("Nvidia TAG: LP0: %lu @ 0x%08lx\n",tegra_lp0_vec_size,tegra_lp0_vec_start);		
+
+		/* Until we find out if the bootloader supports the workaround required to implement
+		   LP0, disable it */
+		/*tegra_lp0_vec_start = tegra_lp0_vec_size = 0;*/
 
 	}
 
@@ -305,9 +312,8 @@ static int __init parse_tag_nvidia(const struct tag *tag)
 			}
 
 		default:
-			pr_info("Ignoring irrelevant nvidia tag 0x%04x!\n", nvtag->bootarg_key);
-			break;
+			return get_cfg_from_tags();
 	} 
-	return 0;
+	return get_cfg_from_tags();
 }
 __tagtable(ATAG_NVIDIA, parse_tag_nvidia);
