@@ -162,7 +162,7 @@ struct platform_device star_battery_charger_device = {
         .id = -1,
 };
 
-void star_misc_init(void)
+void __init star_misc_init(void)
 {
 #if defined(CONFIG_STAR_VIBRATOR)
     star_vibrator_init();

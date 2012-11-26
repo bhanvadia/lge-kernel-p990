@@ -104,7 +104,7 @@ struct platform_device star_headset_detect_device =
 	.dev.platform_data = &star_headset_data,
 };
 
-void star_audio_init(void)
+void __init star_audio_init(void)
 {
       i2c_register_board_info(2, wm8994_board_info, ARRAY_SIZE(wm8994_board_info));
 }

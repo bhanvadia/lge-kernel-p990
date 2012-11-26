@@ -224,7 +224,7 @@ static struct whistler_baseband whistler_baseband[] = {
 	},
 };
 
-int star_baseband_init(void)
+int __init star_baseband_init(void)
 {
 
 /*
